@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>jQuery Flickr Examples</title>
+    <link rel="stylesheet" href="flickr.css" type="text/css" />
+    <link rel="stylesheet" href="thickbox.css" type="text/css" />
+    <script type="text/javascript" src="jquery-1.2.3.js"></script>
+    <script type="text/javascript" src="jquery.flickr-1.0-min.js"></script>
+    <script type="text/javascript" src="jquery.thickbox.js"></script>
+    <script type="text/javascript">
+      $(function(){
+        $('#flickr1').flickr({
+          api_key: "f28804be7a09c5845676349c7e47d636",
+          type: 'search',
+          user_id: '52579289@N00'
+        });
+        $('#flickr2').flickr({
+          api_key: "f28804be7a09c5845676349c7e47d636",
+          type: 'search',
+          user_id: '52579289@N00',
+          attr: 'class="thickbox" rel="gallery"',
+          callback: applyThickbox
+        });
+        pagedFlickr(1);
+      });
+      function applyThickbox(ul){
+        tb_init('a.thickbox', ul);
+      }
+      function applyPaging(ul){
+        ul.append('<br />Page '+$('input:eq(0)', ul).val()+' of '+$('input:eq(1)', ul).val());
+        var prev = parseInt($('input:eq(0)', ul).val()) == 1 ? ' style="display:none;"' : '';
+        $('<a href="prev"'+prev+'>&lt; Prev</a>').css('margin','0 6px').click(function(e){
+          pagedFlickr(parseInt($('input:eq(0)', ul).val())-1)
+          return false;
+        }).appendTo(ul);
+        var next = parseInt($('input:eq(0)', ul).val()) == parseInt($('input:eq(1)', ul).val()) ? ' style="display:none;"' : '';
+        $('<a href="next"'+next+'>Next &gt;</a>').css('margin','0 6px').click(function(e){
+          pagedFlickr(parseInt($('input:eq(0)', ul).val())+1);
+          return false;
+        }).appendTo(ul);
+      }
+      function pagedFlickr(page){
+        $('ul', $('#flickr3')).remove();
+        $('#flickr3').flickr({
+          api_key: "f28804be7a09c5845676349c7e47d636",
+          type: 'search',
+          user_id: '52579289@N00',
+          per_page: 2,
+          page: page,
+          callback: applyPaging
+        });
+      }
+    </script>
+</head>
+<body>
+  <form action="#" method="GET">
+    <table>
+      <tr>
+        <td>api_key:</td>
+        <td><input type="text" name="api_key" size="20" /></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>type:</td>
+        <td><input name="type" type="radio" value="" checked="checked" />default
+          <input name="type" type="radio" value="search" />search
+          <input name="type" type="radio" value="photoset" />photoset</td>
+      </tr>
+      <tr>
+        <td>photoset_id:</td>
+        <td><input type="text" name="photoset_id" size="20" /></td>
+      </tr>
+      <tr>
+        <td>text:</td>
+        <td><input type="text" name="text" size="20" /></td>
+      </tr>
+      <tr>
+        <td>user_id:</td>
+        <td><input type="text" name="user_id" size="20" /></td>
+      </tr>
+      <tr>
+        <td>group_id:</td>
+        <td><input type="text" name="group_id" size="20" /></td>
+      </tr>
+      <tr>
+        <td>tags:</td>
+        <td><input type="text" name="tags" size="20" /></td>
+      </tr>
+      <tr>
+        <td>tag_mode:</td>
+        <td><input name="tag_mode" type="radio" value="any" checked="checked" />any
+          <input name="tag_mode" type="radio" value="all" />all</td>
+      </tr>
+      <tr>
+        <td>sort:</td>
+        <td><select name="sort">
+          <option>relevance</option>
+          <option>date-posted-asc</option>
+          <option>date-posted-desc</option>
+          <option>date-taken-asc</option>
+          <option>date-taken-desc</option>
+          <option>interestingness-desc</option>
+          <option>interestingness-asc</option>
+        </select></td>
+      </tr>
+      <tr>
+        <td>thumb_size:</td>
+        <td><input name="thumb_size" type="radio" value="s" checked="checked" />s
+          <input name="thumb_size" type="radio" value="t" />t
+          <input name="thumb_size" type="radio" value="m" />m</td>
+      </tr>
+      <tr>
+        <td>size:</td>
+        <td><input name="size" type="radio" value="" checked="checked" />default
+          <input name="size" type="radio" value="m" />m
+          <input name="size" type="radio" value="b" />b
+          <input name="size" type="radio" value="0" />o</td>
+      </tr>
+    </table>
+  </form>
+  <div id="flickr1">jQuery Flickr results searching on user_id (mine) </div>
+  <div id="flickr2">jQuery Flickr results with jQuery Thickbox plug-in</div>
+  <div id="flickr3">jQuery Flickr results with simple Paging functionality</div>
+</body>
+</html>
